@@ -1,0 +1,140 @@
+import java.awt.*;
+import java.awt.event.*;
+
+class Calculator implements ActionListener {
+    int c, n;
+    String s1, s2, s3, s4, s5;
+    Frame f;
+    Button[] numButtons = new Button[10];
+    Button addBtn, subBtn, mulBtn, divBtn, modBtn, eqBtn, clrBtn;
+    Panel p;
+    TextField tf;
+    GridLayout g;
+
+    Calculator() {
+        f = new Frame("My Calculator");
+        p = new Panel();
+        f.setLayout(new FlowLayout());
+
+        tf = new TextField(20);
+        f.add(tf);
+
+        g = new GridLayout(5, 4, 10, 10);
+        p.setLayout(g);
+
+        // Digit buttons (0-9)
+        for (int i = 0; i <= 9; i++) {
+            numButtons[i] = new Button(String.valueOf(i));
+            numButtons[i].addActionListener(this);
+        }
+
+        // Operation buttons
+        addBtn = new Button("+");
+        subBtn = new Button("-");
+        mulBtn = new Button("*");
+        divBtn = new Button("/");
+        modBtn = new Button("%");
+        eqBtn = new Button("=");
+        clrBtn = new Button("C");
+
+        addBtn.addActionListener(this);
+        subBtn.addActionListener(this);
+        mulBtn.addActionListener(this);
+        divBtn.addActionListener(this);
+        modBtn.addActionListener(this);
+        eqBtn.addActionListener(this);
+        clrBtn.addActionListener(this);
+
+        // Add buttons to panel in calculator layout
+        p.add(numButtons[7]);
+        p.add(numButtons[8]);
+        p.add(numButtons[9]);
+        p.add(addBtn);
+
+        p.add(numButtons[4]);
+        p.add(numButtons[5]);
+        p.add(numButtons[6]);
+        p.add(subBtn);
+
+        p.add(numButtons[1]);
+        p.add(numButtons[2]);
+        p.add(numButtons[3]);
+        p.add(mulBtn);
+
+        p.add(numButtons[0]);
+        p.add(modBtn);
+        p.add(divBtn);
+        p.add(eqBtn);
+
+        p.add(clrBtn);
+
+        f.add(p);
+        f.setSize(300, 350);
+        f.setVisible(true);
+
+        f.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                f.dispose();
+            }
+        });
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+
+        // Digit buttons
+        if (command.charAt(0) >= '0' && command.charAt(0) <= '9') {
+            tf.setText(tf.getText() + command);
+        }
+        // Operations
+        else if (command.equals("+")) {
+            s1 = tf.getText();
+            tf.setText("");
+            c = 1;
+        } else if (command.equals("-")) {
+            s1 = tf.getText();
+            tf.setText("");
+            c = 2;
+        } else if (command.equals("*")) {
+            s1 = tf.getText();
+            tf.setText("");
+            c = 3;
+        } else if (command.equals("/")) {
+            s1 = tf.getText();
+            tf.setText("");
+            c = 4;
+        } else if (command.equals("%")) {
+            s1 = tf.getText();
+            tf.setText("");
+            c = 5;
+        } else if (command.equals("=")) {
+            s2 = tf.getText();
+            try {
+                int num1 = Integer.parseInt(s1);
+                int num2 = Integer.parseInt(s2);
+                switch (c) {
+                    case 1: n = num1 + num2; break;
+                    case 2: n = num1 - num2; break;
+                    case 3: n = num1 * num2; break;
+                    case 4: 
+                        if (num2 != 0) n = num1 / num2;
+                        else {
+                            tf.setText("Cannot divide by 0");
+                            return;
+                        }
+                        break;
+                    case 5: n = num1 % num2; break;
+                }
+                tf.setText(String.valueOf(n));
+            } catch (Exception ex) {
+                tf.setText("Error");
+            }
+        } else if (command.equals("C")) {
+            tf.setText("");
+        }
+    }
+
+    public static void main(String[] args) {
+        new Calculator();
+    }
+}
